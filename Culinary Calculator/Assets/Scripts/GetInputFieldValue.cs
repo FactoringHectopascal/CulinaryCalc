@@ -1,29 +1,52 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 public class GetInputFieldValue : MonoBehaviour
 {
     [SerializeField]
-    TMP_InputField field;
+    TMP_InputField cost;
     [SerializeField]
-    TMP_InputField flour;
+    TMP_InputField unit;
     [SerializeField]
-    TMP_InputField flourCost;
+    TMP_Text result;
+    [SerializeField]
+    Canvas canvas1;
+    [SerializeField]
+    Canvas canvas2;
+    [SerializeField]
+    float resultValue;
+    [SerializeField]
+    TMPro.TMP_Dropdown selectedDropDown;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            float cost = -1;
-            Debug.Log(float.TryParse(flourCost.text, out cost));
-            float flourAmt = -1;
-            Debug.Log(float.TryParse(flour.text, out flourAmt));
-            Debug.Log(flourAmt * cost);
-        }
+    }
+    public void SwitchPanel()
+    {
+        canvas1.GetComponent<Canvas>().enabled = false;
+        canvas2.GetComponent<Canvas>().enabled = true;
+    }
+
+    public void SwitchPanelOther()
+    {
+        canvas1.GetComponent<Canvas>().enabled = true;
+        canvas2.GetComponent<Canvas>().enabled = false;
+    }
+
+    public void Calculate()
+    {
+        float.TryParse(unit.text, out float unitFloat);
+        float.TryParse(cost.text, out float costFloat);
+        result.text = "$" + (costFloat / unitFloat).ToString();
+        resultValue = (costFloat / unitFloat);
+    }
+    public void Save()
+    {
+
     }
 }
