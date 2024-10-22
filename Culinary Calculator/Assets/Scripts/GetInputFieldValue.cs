@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using TMPro;
 using UnityEngine;
 public class GetInputFieldValue : MonoBehaviour
@@ -13,9 +15,11 @@ public class GetInputFieldValue : MonoBehaviour
     [SerializeField]
     Canvas canvas2;
     [SerializeField]
-    float resultValue;
+    TMPro.TMP_Dropdown dropDown;
     [SerializeField]
-    TMPro.TMP_Dropdown selectedDropDown;
+    TMP_InputField saveThing;
+    [SerializeField]
+    TMP_InputField saveTextField;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -43,10 +47,10 @@ public class GetInputFieldValue : MonoBehaviour
         float.TryParse(unit.text, out float unitFloat);
         float.TryParse(cost.text, out float costFloat);
         result.text = "$" + (costFloat / unitFloat).ToString();
-        resultValue = (costFloat / unitFloat);
     }
     public void Save()
     {
-
+        List<string> newOption = new() {"" + saveTextField.text};
+        dropDown.AddOptions(newOption);
     }
 }
