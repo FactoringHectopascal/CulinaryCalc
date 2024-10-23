@@ -9,6 +9,8 @@ using TMPro;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Rendering;
+using System.Runtime.Serialization.Json;
+using Unity.VisualScripting;
 public class GetInputFieldValue : MonoBehaviour
 {
     [SerializeField]
@@ -28,23 +30,58 @@ public class GetInputFieldValue : MonoBehaviour
     [SerializeField]
     TMP_InputField saveTextField;
     [SerializeField]
-    string dbPath = "Assets/Text/Bruh.txt";
+    string dbPath = "Assets/Text/Database.txt";
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     PriceDB myPrices = new();
+    
     float resultsNumber;
 
+    [Serializable]
     class PriceDB
     {
-        public List<string> ingNames = new();
-        public List<float> ingPrices = new();
+        public List<Ingredient> ings = new();
+
+        public void Add(Ingredient ingredient)
+        {
+            ings.Add(ingredient);
+        }
     }
 
+    [Serializable]
+    public class Ingredient
+    {
+        public string name;
+        public float price;
+        public Ingredient (string name, float price)
+        {
+            this.name = name;
+            this.price = price;
+        }
+
+        public string getLine()
+        {
+            return name + ", $" + price.ToString();
+        }
+    }
 
     void Start()
     {
+        // load text file data
         StreamReader reader = new StreamReader(dbPath);
-        PriceDB testPrices = JsonUtility.FromJson<PriceDB>(reader.ReadToEnd());
+        string inJson = reader.ReadToEnd();
+        myPrices = JsonUtility.FromJson<PriceDB>(inJson);
+
+        // if the database object failed to load, create an empty one
+        if (myPrices == null)
+        {
+            myPrices = new();
+        }
         reader.Close();
+
+        // update the list UI
+        UpdateDropdown();
+
     }
 
     // Update is called once per frame
@@ -72,18 +109,30 @@ public class GetInputFieldValue : MonoBehaviour
     }
     public void Save()
     {
+        myPrices.Add(new Ingredient(saveTextField.text, resultsNumber));
+        UpdateDropdown();
+
         //List<string> newOption = new() {saveTextField.text};
-        myPrices.ingNames.Add(saveTextField.text);
-        myPrices.ingPrices.Add(resultsNumber);
-        List<string> newOption = new() {saveTextField.text};
-        dropDown.AddOptions(newOption);
+        //dropDown.AddOptions(newOption);
 
-        string testJason = JsonUtility.ToJson(myPrices);
 
-        StreamWriter writer = new StreamWriter(dbPath, false);
-        writer.WriteLine(testJason);
+        // write to file
+        string outJson = JsonUtility.ToJson(myPrices);
+        StreamWriter writer = new(dbPath, false);
+        writer.WriteLine(outJson);
         writer.Close();
 
     }
 
+    public void UpdateDropdown()
+    {
+        // populate list
+        dropDown.ClearOptions();
+        List<string> newOptions = new();
+        for (int ii = 0; ii < myPrices.ings.Count; ii++)
+        {
+            newOptions.Add(myPrices.ings[ii].getLine());
+        }
+        dropDown.AddOptions(newOptions);
+    }
 }
