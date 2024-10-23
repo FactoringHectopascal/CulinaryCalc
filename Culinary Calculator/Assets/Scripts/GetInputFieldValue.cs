@@ -66,7 +66,7 @@ public class GetInputFieldValue : MonoBehaviour
     }
 
     void Start()
-    {
+    {   // if the database.json doesn't exist, create a new one
         if (!File.Exists(dbPath))
         {
             File.Create(dbPath).Close();
@@ -92,6 +92,8 @@ public class GetInputFieldValue : MonoBehaviour
     void Update()
     {
     }
+
+    // switchpanel functions are made to be used for buttons, so that it switches which canvas is enabled.
     public void SwitchPanel()
     {
         canvas1.enabled = false;
@@ -103,7 +105,7 @@ public class GetInputFieldValue : MonoBehaviour
         canvas1.enabled = true;
         canvas2.enabled = false;
     }
-
+    // parse the text inside of the input fields as floats so you can divide them and round them, then output it to the result text
     public void Calculate()
     {
         float.TryParse(unit.text, out float unitFloat);
@@ -111,6 +113,8 @@ public class GetInputFieldValue : MonoBehaviour
         resultsNumber = MathF.Round((costFloat / unitFloat) * 100.0f) * 0.01f;
         result.text = "$" + resultsNumber.ToString();
     }
+    // add a new object of type "Ingredient" with it's name and price data
+    // then update the dropdown
     public void Save()
     {
         myPrices.Add(new Ingredient(saveTextField.text, resultsNumber));
@@ -138,5 +142,16 @@ public class GetInputFieldValue : MonoBehaviour
             newOptions.Add(myPrices.ings[ii].getLine());
         }
         dropDown.AddOptions(newOptions);
+    }
+
+    public void DeleteIngredient(string name)
+    {
+        int i = myPrices.ings.FindIndex(a=>a.name == name);
+        myPrices.ings.RemoveAt(i);
+        string outJson = JsonUtility.ToJson(myPrices);
+        StreamWriter writer = new(dbPath, false);
+        writer.WriteLine(outJson);
+        writer.Close();
+        UpdateDropdown();
     }
 }
