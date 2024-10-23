@@ -67,6 +67,10 @@ public class GetInputFieldValue : MonoBehaviour
 
     void Start()
     {
+        if (!File.Exists(dbPath))
+        {
+            File.Create(dbPath).Close();
+        }
         // load text file data
         StreamReader reader = new StreamReader(dbPath);
         string inJson = reader.ReadToEnd();
@@ -81,7 +85,7 @@ public class GetInputFieldValue : MonoBehaviour
 
         // update the list UI
         UpdateDropdown();
-
+        
     }
 
     // Update is called once per frame
@@ -90,14 +94,14 @@ public class GetInputFieldValue : MonoBehaviour
     }
     public void SwitchPanel()
     {
-        canvas1.GetComponent<Canvas>().enabled = false;
-        canvas2.GetComponent<Canvas>().enabled = true;
+        canvas1.enabled = false;
+        canvas2.enabled = true;
     }
 
     public void SwitchPanelOther()
     {
-        canvas1.GetComponent<Canvas>().enabled = true;
-        canvas2.GetComponent<Canvas>().enabled = false;
+        canvas1.enabled = true;
+        canvas2.enabled = false;
     }
 
     public void Calculate()
