@@ -4901,9 +4901,21 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Gram
       m_Image: {fileID: 0}
-    - m_Text: Teaspoon
+    - m_Text: Fluid Ounces
+      m_Image: {fileID: 0}
+    - m_Text: Gallon
+      m_Image: {fileID: 0}
+    - m_Text: Quart
+      m_Image: {fileID: 0}
+    - m_Text: Pint
       m_Image: {fileID: 0}
     - m_Text: Tablespoon
+      m_Image: {fileID: 0}
+    - m_Text: Teaspoon
+      m_Image: {fileID: 0}
+    - m_Text: Cup
+      m_Image: {fileID: 0}
+    - m_Text: Unit
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
