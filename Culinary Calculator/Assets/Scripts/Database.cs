@@ -35,12 +35,11 @@ public class Database : MonoBehaviour
     TMP_Text markupPriceNumber;
     [SerializeField]
     public TMP_InputField qty;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    [SerializeField]
+    TMP_Text ingList;
     PriceDB myPrices = new();
-
-
-
+    [SerializeField]
+    TMP_Text value;
     [Serializable]
     class PriceDB
     {
@@ -70,7 +69,7 @@ public class Database : MonoBehaviour
         public string getLine()
         {
             //return name + ", $" + price.ToString();
-            return name + ", $" + MathF.Round(price / units, 2).ToString() + " per " + unitType;
+            return name + ", $" + MathF.Round(price / units, 2).ToString("0.00") + " per " + unitType;
         }
     }
 
@@ -117,12 +116,6 @@ public class Database : MonoBehaviour
             UpdateMarkupServings();
         });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     // parse the text inside of the input fields as floats so you can divide them and round them, then output it to the result text
 
     // add a new object of type "Ingredient" with it's name and price data
@@ -131,7 +124,6 @@ public class Database : MonoBehaviour
     {
         myPrices.Add(new Ingredient(nameTextField.text, float.Parse(cost.text), float.Parse(units.text), unitType.captionText.text));
         UpdateDropdown();
-
         //List<string> newOption = new() {saveTextField.text};
         //dropDown.AddOptions(newOption);
 
@@ -175,7 +167,7 @@ public class Database : MonoBehaviour
     {
         currIngredient = myPrices.ings[index];
         nameTextField.text = currIngredient.name;
-        cost.text = currIngredient.price.ToString();
+        cost.text = currIngredient.price.ToString("0.00");
         units.text = currIngredient.units.ToString();
         unitType.captionText.text = currIngredient.unitType;
     }
@@ -186,9 +178,18 @@ public class Database : MonoBehaviour
             return;
         totalPrice += float.Parse(qtyResult.text);
         //Debug.Log(float.Parse(qtyResult.text));
-        totalPriceText.text = MathF.Round(totalPrice, 2).ToString();
+        totalPriceText.text = MathF.Round(totalPrice, 2).ToString("0.00");
         UpdateMarkupServings();
 
+
+        // Carrot 1.99 per Unit, Qty 5 for 9.95
+        ingList.text += " • "
+            + nameTextField.text + " $"
+            + value.text + " per "
+            + unitType.captionText.text + ", Qty "
+            + qty.text + " for $"
+            + qtyResult.text + "\n";
+        
     }
 
     public void ClearTotal()
@@ -199,6 +200,7 @@ public class Database : MonoBehaviour
         servingFieldNumber.text = "-.--";
         servingsField.text = "";
         markupField.text = "";
+        ingList.text = "";
     }
 
     public void UpdateMarkupServings()
@@ -211,13 +213,15 @@ public class Database : MonoBehaviour
             servingFieldNumber.text = "-.--";
             return;
         }
+
+        markupFloat /= 100;
         float markupTotal = MathF.Round(totalPrice * (1 + markupFloat), 2);
-        markupPriceNumber.text = markupTotal.ToString();
+        markupPriceNumber.text = markupTotal.ToString("0.00");
         if (float.TryParse(servingsField.text, out float servingFloat) == false)
         {
             servingFieldNumber.text = "-.--";
             return;
         }
-        servingFieldNumber.text = (MathF.Round(markupTotal / float.Parse(servingsField.text), 2)).ToString();
+        servingFieldNumber.text = (MathF.Round(markupTotal / float.Parse(servingsField.text), 2)).ToString("0.00");
     }
 }

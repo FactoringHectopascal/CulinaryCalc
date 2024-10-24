@@ -44,7 +44,7 @@ public class Equation : MonoBehaviour
         float.TryParse(unit.text, out float unitFloat);
         float.TryParse(cost.text, out float costFloat);
         float unitCost = costFloat / unitFloat;
-        unitResult.text = MathF.Round(unitCost, 2).ToString();
+        unitResult.text = MathF.Round(unitCost, 2).ToString("0.00");
 
         if (qty.text == "")
         {
@@ -54,6 +54,6 @@ public class Equation : MonoBehaviour
             
         float.TryParse(qty.text, out float qtyFloat);
         float qtyCost = unitCost * qtyFloat;
-        qtyResult.text =  MathF.Round(qtyCost, 2).ToString();
+        qtyResult.text =  MathF.Round(qtyCost, 2).ToString("0.00");
     }
 }
