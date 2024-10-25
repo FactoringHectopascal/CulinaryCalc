@@ -115,6 +115,10 @@ public class Database : MonoBehaviour
         {
             UpdateMarkupServings();
         });
+        units.onValueChanged.AddListener(delegate
+        {
+            UpdateMarkupServings();
+        });
     }
     // parse the text inside of the input fields as floats so you can divide them and round them, then output it to the result text
 
@@ -122,6 +126,8 @@ public class Database : MonoBehaviour
     // then update the dropdown
     public void Save()
     {
+        if (nameTextField.text == "")
+            nameTextField.text = "Unnamed Ingredient";
         myPrices.Add(new Ingredient(nameTextField.text, float.Parse(cost.text), float.Parse(units.text), unitType.captionText.text));
         UpdateDropdown();
         //List<string> newOption = new() {saveTextField.text};
@@ -174,6 +180,11 @@ public class Database : MonoBehaviour
 
     public void AddQuantityToTotal()
     {
+
+        if (nameTextField.text == "")
+            nameTextField.text = "Unnamed Ingredient";
+        if (value.text == "-.--")
+            return;
         if (qtyResult.text == "-.--")
             return;
         totalPrice += float.Parse(qtyResult.text);

@@ -38,6 +38,7 @@ public class Equation : MonoBehaviour
         if (unit.text == "" || cost.text == "")
         {
             unitResult.text = "-.--";
+            qtyResult.text = "-.--";
             return;
         }
 
