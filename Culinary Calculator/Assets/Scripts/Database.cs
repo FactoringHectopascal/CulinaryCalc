@@ -129,12 +129,13 @@ public class Database : MonoBehaviour
     {
         if (nameTextField.text == "")
             nameTextField.text = "Unnamed Ingredient";
-        myPrices.Add(new Ingredient(nameTextField.text, float.Parse(cost.text), float.Parse(units.text), unitType.captionText.text));
+        currIngredient = new Ingredient(nameTextField.text, float.Parse(cost.text), float.Parse(units.text), unitType.captionText.text);
+        myPrices.Add(currIngredient);
         UpdateDropdown();
         //List<string> newOption = new() {saveTextField.text};
         //dropDown.AddOptions(newOption);
 
-
+        dropDown.captionText.text = currIngredient.getLine();
         // write to file
 
         SaveJSON();
