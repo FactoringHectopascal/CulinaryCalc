@@ -119,6 +119,7 @@ public class Database : MonoBehaviour
         {
             UpdateMarkupServings();
         });
+        ingList.text = "";
     }
     // parse the text inside of the input fields as floats so you can divide them and round them, then output it to the result text
 
